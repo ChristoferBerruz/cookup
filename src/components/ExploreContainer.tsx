@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import './ExploreContainer.css';
-import {IonButton, IonIcon, IonContent, IonModal, IonLabel, IonItem, IonInput} from '@ionic/react';
+import {IonButton, IonIcon, IonContent, 
+  IonRouterLink, IonModal, IonLabel, IonItem, IonInput} from '@ionic/react';
 interface ContainerProps { }
 
 const LoginForm : React.FC = () => {
@@ -18,14 +19,19 @@ const LoginForm : React.FC = () => {
           <IonLabel position="floating"> Password </IonLabel>
           <IonInput/>
         </IonItem>
-        <IonButton className="ion-margin-top" color="medium" type="submit">
-          Login
-        </IonButton>
+        <IonRouterLink href="/cookup">
+          <IonButton className="ion-margin-top" 
+              color="medium"
+              onClick={handleLogin}>
+            Login
+          </IonButton>
+        </IonRouterLink>
         <IonButton className="ion-margin-top" color="light" onClick={()=>setShowModal(false)} >
           Cancel
         </IonButton>
       </form>
       </IonModal>
+
       <IonButton color="medium" onClick={() => setShowModal(true)}>
         Login
       </IonButton>
@@ -33,12 +39,12 @@ const LoginForm : React.FC = () => {
   );
 }
 
-function openLoginForm(){
-  alert("Login in...")
+function handleLogin(){
+  alert('Logging you in..')
 }
 
-function handleLogin(){
-
+function continueToHomePage(){
+  alert('Going to homepage...')
 }
 
 const ExploreContainer: React.FC<ContainerProps> = () => {
@@ -48,9 +54,11 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
       <strong>What will you CookUp today?</strong>
       <br></br>
       <LoginForm />
-      <IonButton color="light">
-        Guest
-      </IonButton>
+      <IonRouterLink href="/cookup">
+        <IonButton color="light" onClick={continueToHomePage}>
+          Guest
+        </IonButton>
+      </IonRouterLink>
     </div>
   );
 };
