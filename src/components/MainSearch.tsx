@@ -5,29 +5,53 @@ import {IonContent, IonHeader, IonGrid,
      IonSelect, IonModal, IonButton, IonList, 
      IonListHeader, IonLabel, IonSelectOption, IonItemDivider} from '@ionic/react';
 
+import Repository from '../DataLayer/Repository';
 
-interface SearchFilterProps{
+const repo = new Repository();
 
+interface SearchFilterToolbarProps{
+    tagsSelected : Array<string>,
+    setTagsSelected: Function
 }
-const SearchFilterToolbar : React.FC = () => {
+
+const SearchFilterToolbar : React.FC<SearchFilterToolbarProps> = (props) => {
     const [isRecipeModalOpen, setRecipeModalOpen] = useState(false);
     const [recipeSearchText, setRecipeText] = useState('');
     const [isTagsModalOpen, setTagsModalOpen] = useState(false);
-    const [tagsSelected, setTagsSelected] = useState<string[]>([]);
-    const tags = ['American', 'Asian'];
+    var {
+        tagsSelected,
+        setTagsSelected
+    } = props;
+
     return(
         <React.Fragment>
             {/** Recipes Modal */}
-            <IonModal isOpen={isRecipeModalOpen}>
-                <IonSearchbar value={recipeSearchText}
-                onIonChange={e => setRecipeText(e.detail.value!)}></IonSearchbar>
-                <IonButton onClick={() => setRecipeModalOpen(false)}>
-                    Close
-                </IonButton>
+            <IonModal isOpen={isRecipeModalOpen} 
+            onDidDismiss={() => setRecipeModalOpen(false)}
+            >
+                <form className="ion-padding">
+                    <h2>Enter a recipe name</h2>
+                    <IonItem>
+                        <IonSearchbar value={recipeSearchText}
+                        onIonChange={e => setRecipeText(e.detail.value!)}></IonSearchbar>
+                    </IonItem>
+                    <IonButton
+                    color="medium"
+                    onClick={() => repo.getRecipeByDirectSearch(recipeSearchText)}>
+                        Search Recipe
+                    </IonButton>
+                    <IonButton 
+                    color="light"
+                    onClick={() => setRecipeModalOpen(false)}>
+                        Close
+                    </IonButton>
+                </form>
             </IonModal>
 
             {/** Filters modal */}
-            <IonModal isOpen={isTagsModalOpen}>
+            <IonModal isOpen={isTagsModalOpen}
+            onDidDismiss={() => setTagsModalOpen(false)}
+            >
                 <IonList>
                     <IonListHeader>
                         <IonLabel>Available filters</IonLabel>
@@ -46,18 +70,24 @@ const SearchFilterToolbar : React.FC = () => {
                         </IonSelect>
                     </IonItem>
                 </IonList>
-                <IonButton onClick={() => setTagsModalOpen(false)}>
+                <IonButton 
+                color="light"
+                onClick={() => setTagsModalOpen(false)}>
                     Close
                 </IonButton>
             </IonModal>
 
-            {/** This are the actual buttons display on the screen */}
+            {/** These are the actual buttons display on the screen */}
             <IonRow>
                 <IonCol size-md="12">
-                    <IonButton onClick={() => setRecipeModalOpen(true)}>
+                    <IonButton 
+                    color="medium"
+                    onClick={() => setRecipeModalOpen(true)}>
                         Search Recipe
                     </IonButton>
-                    <IonButton onClick={() => setTagsModalOpen(true)}>
+                    <IonButton 
+                    color="medium"
+                    onClick={() => setTagsModalOpen(true)}>
                         Apply filters
                     </IonButton>
                 </IonCol>
@@ -82,9 +112,14 @@ const RecipesPresentation : React.FC = () => {
     );
 }
 const MainContent : React.FC = () => {
+    const [tagsSelected, setTagsSelected] = useState<string[]>([]);
+    const tags = ['American', 'Asian'];
     return(
         <IonGrid>
-            <SearchFilterToolbar />
+            <SearchFilterToolbar
+            tagsSelected={tagsSelected}
+            setTagsSelected={setTagsSelected}
+            />
             <RecipesPresentation />
         </IonGrid>
     );

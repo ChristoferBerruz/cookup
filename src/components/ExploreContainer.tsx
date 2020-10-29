@@ -8,7 +8,7 @@ const LoginForm : React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   return(
     <React.Fragment>
-      <IonModal isOpen={showModal}>
+      <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
       <form className="ion-padding">
         <h2>Login</h2>
         <IonItem>
