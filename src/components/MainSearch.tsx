@@ -3,10 +3,10 @@ import {IonContent, IonHeader, IonGrid,
     IonRow, IonCol, IonSearchbar, IonTitle,
      IonToolbar, IonSegment, IonItem, IonSegmentButton,
      IonSelect, IonModal, IonButton, IonList, 
-     IonListHeader, IonLabel, IonSelectOption, IonItemDivider} from '@ionic/react';
-
+     IonListHeader, IonLabel, IonSelectOption, IonItemDivider, IonMenu, IonIcon, IonChip} from '@ionic/react';
+import {restaurant, closeCircle} from 'ionicons/icons';
 import Repository from '../DataLayer/Repository';
-
+import IngredientsMenu from './IngredientsMenu';
 const repo = new Repository();
 
 interface SearchFilterToolbarProps{
@@ -124,28 +124,13 @@ const MainContent : React.FC = () => {
         </IonGrid>
     );
 }
-
-const IngredientSearch : React.FC = () => {
-    const [searchText, setSearchText] = useState('');
-    return(
-        <IonSearchbar value={searchText}
-            onIonChange={e => setSearchText(e.detail.value!)}
-        >
-        </IonSearchbar>
-    );
-}
-const IngredientSearchPanel : React.FC = () => {
-    return(
-        <IngredientSearch/>
-    );
-}
 const MainSearch : React.FC = () => {
     return(
         <IonContent fullscreen>
             <IonGrid>
                 <IonRow>
                     <IonCol size-md="3">
-                        <IngredientSearchPanel />
+                        <IngredientsMenu />
                     </IonCol>
                     <IonCol size-md="9">
                         <MainContent />
