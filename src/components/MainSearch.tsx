@@ -5,6 +5,7 @@ import {IonContent, IonHeader, IonGrid,
      IonSelect, IonModal, IonButton, IonList, 
      IonListHeader, IonLabel, IonSelectOption, IonItemDivider, IonMenu, IonIcon, IonChip} from '@ionic/react';
 import {restaurant, closeCircle} from 'ionicons/icons';
+import RecipeCard from './RecipeCard';
 import Repository from '../DataLayer/Repository';
 import IngredientsMenu from './IngredientsMenu';
 const repo = new Repository();
