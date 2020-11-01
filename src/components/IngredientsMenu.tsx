@@ -1,22 +1,47 @@
-import React, {Dispatch, useState} from 'react';
+import React, {Dispatch, useContext, useReducer, useState} from 'react';
 import {IonSearchbar, IonTitle, IonItem,
     IonLabel, IonIcon, IonList, IonHeader,
     IonToolbar, IonButtons, IonButton, IonModal, IonChip} from '@ionic/react';
 import {restaurant, closeCircle} from 'ionicons/icons';
 import Repository from '../DataLayer/Repository';
+import {CookUpContext, CookUpContextProps} from './MainSearch';
 
 interface IngredientSectionProps{
     sectionName:string,
     ingredients:Array<string>
 }
 
+
+const reducer = (key:number) => key+1;
+const IngredientChip:React.FC<{ingredient:string}> = ({ingredient}) => {
+    const {setSelectedIngredients} = useContext(CookUpContext);
+    const [isSelected, setIsSelected] = useState(false);
+    const [id, updateId] = useReducer(reducer, 0);
+    function update(){
+        setSelectedIngredients(ingredient);
+        updateId();
+        setIsSelected(!isSelected);
+    }
+    return(
+        <IonChip outline
+            color={isSelected?"success":"primary"}
+            onClick={() => update()}
+        >
+            <IonLabel>{ingredient}</IonLabel>
+            {
+                isSelected? <IonIcon icon={closeCircle} /> : null
+            }
+        </IonChip>
+    );
+}
 const IngredientSection:React.FC<IngredientSectionProps> = ({sectionName, ingredients}) =>{
+    
     const [isModalOpen, setModalOpen] = useState(false);
-    const IngredientChips = ingredients.map(ing => {
+    const IngredientChips = ingredients.map(ingredient => {
         return(
-            <IonChip key={ing!}>
-                <IonLabel>{ing!}</IonLabel>
-            </IonChip>
+            <IngredientChip ingredient={ingredient}
+                key={ingredient}
+            />
         );
     });
     return(
@@ -46,6 +71,7 @@ const IngredientSection:React.FC<IngredientSectionProps> = ({sectionName, ingred
 
 const IngredientSearch : React.FC = () => {
     const [searchText, setSearchText] = useState('');
+    const {selectedIngredients} = useContext(CookUpContext);
     const ingredientsDairy = ["milk", "cheese"];
     const ingredientsVeg = ["tomatoes", "carrots"];
     const ingredientsMeat = ["chicken", "beef"];
@@ -87,6 +113,12 @@ const IngredientSearch : React.FC = () => {
             <IonList>
                 {SectionsComponent}
             </IonList>
+            <IonItem>
+                Ingredients:{
+                selectedIngredients.length ? 
+                selectedIngredients.reduce((prev, cur) => prev + ',' + cur + ','):'None'
+                }
+            </IonItem>
         </React.Fragment>
     );
 }
