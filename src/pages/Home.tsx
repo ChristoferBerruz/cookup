@@ -1,31 +1,18 @@
-import { IonContent, IonHeader, IonFooter, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
+import {IonPage} from '@ionic/react';
+import HomeComponent from '../components/Home/HomeComponent';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
-const Home: React.FC = () => {
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Welcome to CookUp</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
-      </IonContent>
-      <IonFooter>
-        <IonToolbar>
-          <IonTitle>Footer </IonTitle>
-        </IonToolbar>
-      </IonFooter>
-    </IonPage>
-  );
-};
+
+const Home : React.FC = () => {
+    return(
+        <IonPage>
+            <Header isUserAuthorized={false}/>
+            <HomeComponent />
+            <Footer />
+        </IonPage>
+    );
+}
 
 export default Home;

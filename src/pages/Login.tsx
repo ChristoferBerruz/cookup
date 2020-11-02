@@ -1,18 +1,17 @@
 import React from 'react';
 import {IonPage} from '@ionic/react';
-import MainSearch from '../components/MainSearch';
+import LoginComponent from '../components/Login/LoginComponent';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-
-const CookUp : React.FC = () => {
+const Login:React.FC = () => {
     return(
         <IonPage>
             <Header isUserAuthorized={false}/>
-            <MainSearch />
+            <LoginComponent />
             <Footer />
         </IonPage>
     );
 }
 
-export default CookUp;
+export default Login;

@@ -3,8 +3,9 @@ import {IonSearchbar, IonTitle, IonItem,
     IonLabel, IonIcon, IonList, IonHeader,
     IonToolbar, IonButtons, IonButton, IonModal, IonChip} from '@ionic/react';
 import {restaurant, closeCircle} from 'ionicons/icons';
-import Repository from '../DataLayer/Repository';
-import {CookUpContext, CookUpContextProps} from './MainSearch';
+import CookUpContext, {CookUpContextProps} from '../context/CookUpContext';
+
+import getAvailableIngredients, {ingredientsData} from '../dataLayer/repository';
 
 interface IngredientSectionProps{
     sectionName:string,
@@ -14,18 +15,24 @@ interface IngredientSectionProps{
 
 const reducer = (key:number) => key+1;
 const IngredientChip:React.FC<{ingredient:string}> = ({ingredient}) => {
-    const {setSelectedIngredients} = useContext(CookUpContext);
-    const [isSelected, setIsSelected] = useState(false);
-    const [id, updateId] = useReducer(reducer, 0);
-    function update(){
-        setSelectedIngredients(ingredient);
-        updateId();
+    {/** Each chip controls adding and removing ingredients to the search context */}
+    const {selectedIngredients, setSelectedIngredients} = useContext(CookUpContext);
+    {/** On render, the chip checks if the ingredient is already present */}
+    const initialState:boolean = selectedIngredients.includes(ingredient);
+
+    {/** Each chip manages own state to re render on click */}
+    const [isSelected, setIsSelected] = useState(initialState);
+
+
+    function updateIngredientList(){
+        const action = !isSelected ? "add":"remove";
+        setSelectedIngredients({item:ingredient, action:action});
         setIsSelected(!isSelected);
     }
     return(
         <IonChip outline
             color={isSelected?"success":"primary"}
-            onClick={() => update()}
+            onClick={() => updateIngredientList()}
         >
             <IonLabel>{ingredient}</IonLabel>
             {
@@ -34,8 +41,8 @@ const IngredientChip:React.FC<{ingredient:string}> = ({ingredient}) => {
         </IonChip>
     );
 }
+
 const IngredientSection:React.FC<IngredientSectionProps> = ({sectionName, ingredients}) =>{
-    
     const [isModalOpen, setModalOpen] = useState(false);
     const IngredientChips = ingredients.map(ingredient => {
         return(
@@ -69,21 +76,10 @@ const IngredientSection:React.FC<IngredientSectionProps> = ({sectionName, ingred
     );
 }
 
-const IngredientSearch : React.FC = () => {
+const IngredientsMenu : React.FC = () => {
     const [searchText, setSearchText] = useState('');
     const {selectedIngredients} = useContext(CookUpContext);
-    const ingredientsDairy = ["milk", "cheese"];
-    const ingredientsVeg = ["tomatoes", "carrots"];
-    const ingredientsMeat = ["chicken", "beef"];
-    const ingredientsSpices= ["paprika", "onion powder"];
-
-    const sections:any = {
-        "Dairy":ingredientsDairy,
-        "Vegetables":ingredientsVeg,
-        "Meats":ingredientsMeat,
-        "Spices":ingredientsSpices
-    };
-
+    const sections:ingredientsData = getAvailableIngredients();
     const SectionsComponent = [];
 
     for(let sec in sections){
@@ -113,19 +109,7 @@ const IngredientSearch : React.FC = () => {
             <IonList>
                 {SectionsComponent}
             </IonList>
-            <IonItem>
-                Ingredients:{
-                selectedIngredients.length ? 
-                selectedIngredients.reduce((prev, cur) => prev + ',' + cur + ','):'None'
-                }
-            </IonItem>
         </React.Fragment>
-    );
-}
-
-const IngredientsMenu : React.FC = () => {
-    return(
-        <IngredientSearch/>
     );
 }
 
