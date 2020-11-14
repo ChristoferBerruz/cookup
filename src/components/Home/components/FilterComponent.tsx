@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import {IonItem,
      IonSelect, IonModal, IonButton, IonList, 
      IonListHeader, IonLabel, IonSelectOption} from '@ionic/react';
-import CookUpContext from '../context/CookUpContext';
+import {CookUpContext} from '../../Providers/CookUpProvider';
 
 const SelectFiltersComponent : React.FC = () => {
     const [isTagsModalOpen, setTagsModalOpen] = useState(false);

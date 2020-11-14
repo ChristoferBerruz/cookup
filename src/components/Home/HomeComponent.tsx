@@ -3,41 +3,12 @@ import {createContext, useState, useReducer} from 'react';
 import {IonContent, IonGrid, IonRow, IonCol} from '@ionic/react';
 import MainContent from './components/MainContent';
 import IngredientsMenu from './components/IngredientsMenu';
-import CookUpContext from './context/CookUpContext';
+import CookUpProvider from '../Providers/CookUpProvider';
 
-interface ItemActionInterface{
-    item:string,
-    action:string
-}
 
-function reducer(state:string[], itemAction:ItemActionInterface){
-    const item = itemAction.item;
-    const action = itemAction.action;
-    switch(action){
-        case "add":
-            return [...state, item];
-        case "remove":
-            const update = [...state];
-            update.splice(update.indexOf(item), 1);
-            return update;
-        default:
-            return state
-    }
-}
-
-function reducerArray(state:string[], items:string[]){
-    return items;
-}
 const HomeComponent : React.FC = () => {
-    const [selectedIngredients, setSelectedIngredients] = useReducer(reducer, []);
-    const [selectedTags, setSelectedTags] = useReducer(reducerArray, []);
     return(
-        <CookUpContext.Provider value={{
-                selectedIngredients, 
-                setSelectedIngredients,
-                selectedTags,
-                setSelectedTags
-            }}>
+        <CookUpProvider>
             <IonContent fullscreen>
                 <IonGrid>
                     <IonRow>
@@ -50,7 +21,7 @@ const HomeComponent : React.FC = () => {
                     </IonRow>
                 </IonGrid>
             </IonContent>
-        </CookUpContext.Provider>
+        </CookUpProvider>
     );
 }
 

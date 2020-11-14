@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {IonItem} from '@ionic/react';
-import CookUpContext from '../context/CookUpContext';
+import {CookUpContext} from '../../Providers/CookUpProvider';
 
 const RecipeSummary:React.FC = () => {
     const {selectedIngredients, setSelectedIngredients,

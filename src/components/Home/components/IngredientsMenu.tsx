@@ -3,7 +3,7 @@ import {IonSearchbar, IonTitle, IonItem,
     IonLabel, IonIcon, IonList, IonHeader,
     IonToolbar, IonButtons, IonButton, IonModal, IonChip} from '@ionic/react';
 import {restaurant, closeCircle} from 'ionicons/icons';
-import CookUpContext, {CookUpContextProps} from '../context/CookUpContext';
+import {CookUpContext} from '../../Providers/CookUpProvider';
 
 import getAvailableIngredients, {ingredientsData} from '../dataLayer/repository';
 
