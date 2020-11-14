@@ -10,7 +10,6 @@ const LoginComponent:React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
     function handleLogin(email:string, password:string){
         var success = true;
         auth.signInWithEmailAndPassword(email, password).catch(function(error){
@@ -19,7 +18,7 @@ const LoginComponent:React.FC = () => {
         }).then(() => {
             if(success){
                 alert('Login succesful!');
-                history.goBack();
+                history.push('/home');
             }
         });
     }

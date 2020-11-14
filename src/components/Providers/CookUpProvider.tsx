@@ -4,13 +4,6 @@ interface ItemActionInterface{
     action:string
 }
 
-export interface CookUpContextProps{
-    selectedIngredients:string[],
-    setSelectedIngredients:Function,
-    selectedTags:string[],
-    setSelectedTags:Function
-}
-
 export const CookUpContext = createContext({
     selectedIngredients:new Array<string>(),
     setSelectedIngredients:new Function(),
