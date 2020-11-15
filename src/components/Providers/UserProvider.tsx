@@ -1,18 +1,19 @@
 import React, { createContext,  useState, useEffect} from 'react';
 import {auth} from '../../firebase';
 
-export const UserContext = createContext({user:{}});
+export const UserContext = createContext({user:{}, isLoggedIn:false});
 
 const UserProvider : React.FC = ({children}) => {
-    const [user, setUser] = useState({user:{}});
+    const [userAuth, setUserAuth] = useState({user:{}, isLoggedIn:false});
     useEffect(() => {
         auth.onAuthStateChanged(userAuth => {
-            userAuth? setUser({user:userAuth}) : setUser({user:{}})
+            console.log(userAuth)
+            userAuth? setUserAuth({user:userAuth, isLoggedIn:true}) : setUserAuth({user:{}, isLoggedIn:false})
         });
     },[] ); // Empty array so I am not caught in an infinite loop!
 
     return(
-        <UserContext.Provider value={{user:user}}>
+        <UserContext.Provider value={userAuth}>
             {children}
         </UserContext.Provider>
     );

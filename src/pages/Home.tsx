@@ -8,7 +8,7 @@ import Footer from '../components/Footer';
 const Home : React.FC = () => {
     return(
         <IonPage>
-            <Header isUserAuthorized={false}/>
+            <Header/>
             <HomeComponent />
             <Footer />
         </IonPage>

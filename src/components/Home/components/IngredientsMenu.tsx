@@ -1,19 +1,16 @@
-import React, {Dispatch, useContext, useReducer, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {IonSearchbar, IonTitle, IonItem,
-    IonLabel, IonIcon, IonList, IonHeader,
-    IonToolbar, IonButtons, IonButton, IonModal, IonChip} from '@ionic/react';
+    IonLabel, IonIcon, IonList, IonButton, IonModal, IonChip} from '@ionic/react';
 import {restaurant, closeCircle} from 'ionicons/icons';
 import {CookUpContext} from '../../Providers/CookUpProvider';
 
-import getAvailableIngredients, {ingredientsData} from '../dataLayer/repository';
+import getAvailableIngredients, {ingredientsData} from '../datalayer/repository';
 
 interface IngredientSectionProps{
     sectionName:string,
     ingredients:Array<string>
 }
 
-
-const reducer = (key:number) => key+1;
 const IngredientChip:React.FC<{ingredient:string}> = ({ingredient}) => {
     {/** Each chip controls adding and removing ingredients to the search context */}
     const {selectedIngredients, setSelectedIngredients} = useContext(CookUpContext);

@@ -2,9 +2,6 @@ import React, {useState} from 'react';
 import {IonSearchbar, IonItem,
      IonModal, IonButton} from '@ionic/react';
 
-import Repository from '../../../DataLayer/Repository';
-const repo = new Repository();
-
 const RecipeSearch : React.FC = () => {
     const [isRecipeModalOpen, setRecipeModalOpen] = useState(false);
     const [recipeSearchText, setRecipeText] = useState('');
@@ -22,7 +19,7 @@ const RecipeSearch : React.FC = () => {
                     </IonItem>
                     <IonButton
                     color="medium"
-                    onClick={() => repo.getRecipeByDirectSearch(recipeSearchText)}>
+                    onClick={() => alert('You wanted to search recipes')}>
                         Search Recipe
                     </IonButton>
                     <IonButton 

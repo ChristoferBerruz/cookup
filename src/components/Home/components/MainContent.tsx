@@ -3,7 +3,6 @@ import {IonGrid,IonRow, IonCol} from '@ionic/react';
 import SelectFiltersComponent from './FilterComponent';
 import RecipeSearchComponent from './RecipeSearchComponent';
 import RecipeSummary from './RecipeSummary';
-import Repository from '../../../DataLayer/Repository';
 
 const SearchFilterToolbar : React.FC = () => {
     return(

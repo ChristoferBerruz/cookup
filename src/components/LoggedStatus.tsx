@@ -1,16 +1,34 @@
 import { IonButton, IonTitle } from '@ionic/react';
 import React, {useContext} from 'react';
-import {IonChip, IonLabel} from '@ionic/react';
+import {IonChip, IonLabel, IonRouterLink} from '@ionic/react';
 import {UserContext} from './Providers/UserProvider';
-const LoggedStatus:React.FC = () => {
-    const {user} = useContext(UserContext);
-    console.log(user);
+
+const Content:React.FC<{content:string}> = ({content}) => {
     return(
         <IonChip>
             <IonLabel>
-                {(user as any).user.email? (user as any).user.email : 'Guest'}
+                {content}
             </IonLabel>
         </IonChip>
+    );
+}
+
+const LoggedStatus:React.FC = () => {
+    const {user, isLoggedIn} = useContext(UserContext);
+    console.log(user)   
+    return(
+        <React.Fragment>
+            {
+                isLoggedIn?
+                <IonRouterLink href="/account">
+                    <Content content={(user as any).email} />    
+                </IonRouterLink>
+                :
+                <IonRouterLink href="/login">
+                    <Content content="Log in" />
+                </IonRouterLink>
+            }
+        </React.Fragment>
     );
 }
 
