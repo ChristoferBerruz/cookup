@@ -8,7 +8,6 @@ const SearchFilterToolbar : React.FC = () => {
     return(
         <IonRow>
             <SelectFiltersComponent />
-            <RecipeSearchComponent />
         </IonRow>
     );
 }

@@ -97,12 +97,7 @@ const IngredientsMenu : React.FC = () => {
                 <IonTitle>Search ingredients</IonTitle>
             </IonItem>
 
-            {/** Ingredient search bar */}
-            <IonSearchbar
-                value={searchText}
-                onIonChange={e => setSearchText(e.detail.value!)}
-            >
-            </IonSearchbar>
+            
             <IonList>
                 {SectionsComponent}
             </IonList>
