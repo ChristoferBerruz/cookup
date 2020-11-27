@@ -1,10 +1,12 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
+import axios from 'axios';
 import {IonSearchbar, IonTitle, IonItem,
     IonLabel, IonIcon, IonList, IonButton, IonModal, IonChip} from '@ionic/react';
 import {restaurant, closeCircle} from 'ionicons/icons';
 import {CookUpContext} from '../../Providers/CookUpProvider';
 
 import getAvailableIngredients, {ingredientsData} from '../datalayer/repository';
+import SelectFiltersComponent from './FilterComponent';
 
 interface IngredientSectionProps{
     sectionName:string,
@@ -76,8 +78,20 @@ const IngredientSection:React.FC<IngredientSectionProps> = ({sectionName, ingred
 const IngredientsMenu : React.FC = () => {
     const [searchText, setSearchText] = useState('');
     const {selectedIngredients} = useContext(CookUpContext);
-    const sections:ingredientsData = getAvailableIngredients();
+
+    const initialData:ingredientsData = {};
+    const [sections, setData] = useState(initialData);
+    //const sections:ingredientsData = getAvailableIngredients();
     const SectionsComponent = [];
+
+    useEffect(() => {
+        axios.get<ingredientsData>(`http://localhost:5001/cookup-fdf96/us-central1/getIngredientsData`)
+        .then(res =>{
+            setData(res.data);
+        }).catch(e => {
+            alert('Server is down... Refresh the page');
+        })
+    },[]);
 
     for(let sec in sections){
         let ingredients = sections[sec];
