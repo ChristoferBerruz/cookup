@@ -1,8 +1,27 @@
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
+import Recipe from '../Models/Recipe';
+import {storage} from '../../../../src/firebase';
+
 export interface ingredientsData{
     [key:string]:string[];
 }
 
 export default function getAvailableIngredients():ingredientsData {
     return {};
+}
+
+
+export function getBestMatchRecipes(ingredients:string[], tags:string[]):Promise<AxiosResponse<Recipe[]>>{
+    return axios({
+        method: "POST",
+        url: `http://localhost:5001/cookup-fdf96/us-central1/getBestRecipes`,
+        data: {
+            ingredients:ingredients,
+            tags:tags
+        }
+    });
+}
+
+export function getImageForRecipe(recipeID:string): Promise<any>{
+    return storage.ref("recipe_images/"+recipeID+'.jpg').getDownloadURL();
 }

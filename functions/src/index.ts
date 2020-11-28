@@ -5,7 +5,7 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
-require('cors')({origin: true});
+const cors = require('cors')({origin: true});
 
 export const getIngredientsData = functions.https.onRequest(async (request, response)=>{
   const recipes = await db.collection('ingredients').get();
@@ -109,57 +109,59 @@ function getScore(ingredientsHad:string[], ingredientsPresent:string[],
 
 // Main function that receives tags and ingredients to find best match
 export const getBestRecipes = functions.https.onRequest(async (request, response)=>{
-  let payload:any = request.body;
-  try{
+  cors(request, response, async() => {
+    let payload:any = request.body;
+    try{
 
-    let recipesWithScores:any[] = [];
-    let ingredients:string[] = payload.ingredients? payload.ingredients : [];
-    let tags:string[] = payload.tags? payload.tags : [];
-    let snapshot = await db.collection('Recipes').get();
+      let recipesWithScores:any[] = [];
+      let ingredients:string[] = payload.ingredients? payload.ingredients : [];
+      let tags:string[] = payload.tags? payload.tags : [];
+      let snapshot = await db.collection('Recipes').get();
 
-    snapshot.forEach((doc:any) => {
-      let data = doc.data();
-      let {countMatchingIngredients, countMatchingTags} = getScore(
-        ingredients, data.ingredients, tags, data.tags
-      );
+      snapshot.forEach((doc:any) => {
+        let data = doc.data();
+        let {countMatchingIngredients, countMatchingTags} = getScore(
+          ingredients, data.ingredients, tags, data.tags
+        );
 
-      recipesWithScores.push(
-        {
-          recipeID:doc.id,
-          ingredientScore:countMatchingIngredients,
-          tagScore:countMatchingTags
-        }
-      );
-    });
+        recipesWithScores.push(
+          {
+            recipeID:doc.id,
+            ingredientScore:countMatchingIngredients,
+            tagScore:countMatchingTags
+          }
+        );
+      });
 
-    // Sorting the values
-    recipesWithScores.sort(function (a:any, b:any){
-      return b.ingredientScore - a.ingredientScore || b.tagScore - a.tagScore;
-    });
+      // Sorting the values
+      recipesWithScores.sort(function (a:any, b:any){
+        return b.ingredientScore - a.ingredientScore || b.tagScore - a.tagScore;
+      });
 
 
-    let recipeIDs = recipesWithScores.map((recipeObj:any) => recipeObj.recipeID);
-    //  To avoid expensive computations, we will only send n values
-    let maxCapacity = 10;
+      let recipeIDs = recipesWithScores.map((recipeObj:any) => recipeObj.recipeID);
+      //  To avoid expensive computations, we will only send n values
+      let maxCapacity = 10;
 
-    if(recipeIDs.length > maxCapacity){
-      recipeIDs = recipeIDs.slice(0, maxCapacity);
-    }
-    
-    const refs = recipeIDs.map(id => db.doc(`Recipes/${id}`));
-    db.getAll(...refs)
-    .then((documents:any) => {
-      let recipes = documents.map((doc:any) => Object.assign({recipeID:doc.id}, doc.data()));
-      response.send(recipes);
-    }).catch((error:any) => {
+      if(recipeIDs.length > maxCapacity){
+        recipeIDs = recipeIDs.slice(0, maxCapacity);
+      }
+      
+      const refs = recipeIDs.map(id => db.doc(`Recipes/${id}`));
+      db.getAll(...refs)
+      .then((documents:any) => {
+        let recipes = documents.map((doc:any) => Object.assign({recipeID:doc.id}, doc.data()));
+        response.send(recipes);
+      }).catch((error:any) => {
+        console.log(error);
+        response.statusCode = 400;
+        response.send('Invalid recipeID');
+      });
+
+    }catch(error){
       console.log(error);
       response.statusCode = 400;
-      response.send('Invalid recipeID');
-    });
-
-  }catch(error){
-    console.log(error);
-    response.statusCode = 400;
-    response.send('Bad request');
-  }
+      response.send('Bad request');
+    }
+  });
 });

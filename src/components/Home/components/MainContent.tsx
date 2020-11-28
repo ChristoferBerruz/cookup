@@ -3,6 +3,7 @@ import {IonGrid,IonRow, IonCol} from '@ionic/react';
 import SelectFiltersComponent from './FilterComponent';
 import RecipeSearchComponent from './RecipeSearchComponent';
 import RecipeSummary from './RecipeSummary';
+import RecipeManager from './RecipeManager';
 
 const SearchFilterToolbar : React.FC = () => {
     return(
@@ -17,6 +18,7 @@ const MainContent : React.FC = () => {
         <IonGrid>
             <SearchFilterToolbar/>
             <RecipeSummary />
+            <RecipeManager />
         </IonGrid>
     );
 }
