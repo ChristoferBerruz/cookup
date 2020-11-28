@@ -5,17 +5,34 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
-const cors = require('cors')({origin: true});
+require('cors')({origin: true});
 
 export const getIngredientsData = functions.https.onRequest(async (request, response)=>{
-  cors(request, response, async () => {
-      const recipes = await db.collection('ingredients').get();
-      var result:any= {}
-      recipes.forEach((doc:any) => {
-        result[doc.id] = doc.data().ingredients;
-      });
-      response.send(result)
-    });
+  const recipes = await db.collection('ingredients').get();
+  var result:any= {}
+  recipes.forEach((doc:any) => {
+    result[doc.id] = doc.data().ingredients;
+  });
+  response.send(result)
+});
+
+export const getRecipe = functions.https.onRequest(async (request, response) => {
+  try{
+    const recipeID = request.query.recipeID;
+    const recipe = await db.collection("Recipes").doc(recipeID);
+
+    recipe.get()
+    .then((document:any) => {
+      response.send(document.data());
+    }).catch((error:any)=>{
+      response.statusCode = 400;
+      response.send('Invalid recipeID');
+    })
+  }catch(error){
+    console.log(error);
+    response.statusCode = 400;
+    response.send('No query parameters recipeID');
+  }
 });
 
 export const createRecipes = functions.https.onRequest(async (request, response) => {
@@ -120,9 +137,26 @@ export const getBestRecipes = functions.https.onRequest(async (request, response
       return b.ingredientScore - a.ingredientScore || b.tagScore - a.tagScore;
     });
 
-    console.log(recipesWithScores);
 
-    response.send('Success...');
+    let recipeIDs = recipesWithScores.map((recipeObj:any) => recipeObj.recipeID);
+    //  To avoid expensive computations, we will only send n values
+    let maxCapacity = 10;
+
+    if(recipeIDs.length > maxCapacity){
+      recipeIDs = recipeIDs.slice(0, maxCapacity);
+    }
+    
+    const refs = recipeIDs.map(id => db.doc(`Recipes/${id}`));
+    db.getAll(...refs)
+    .then((documents:any) => {
+      let recipes = documents.map((doc:any) => Object.assign({recipeID:doc.id}, doc.data()));
+      response.send(recipes);
+    }).catch((error:any) => {
+      console.log(error);
+      response.statusCode = 400;
+      response.send('Invalid recipeID');
+    });
+
   }catch(error){
     console.log(error);
     response.statusCode = 400;
