@@ -66,3 +66,66 @@ export const populateIngredients = functions.https.onRequest(async (request, res
     response.send("Bad request");
   }
 });
+
+
+function getScore(ingredientsHad:string[], ingredientsPresent:string[],
+  tagsHad:string[], tagsPresent:string[]): any{
+    let matchingIngredients = 0;
+    for(let ingredient of ingredientsHad){
+      if(ingredientsPresent.includes(ingredient)){
+        matchingIngredients += 1;
+      }
+    }
+
+    let matchingTags = 0;
+    for(let tag of tagsHad){
+      if(tagsPresent.includes(tag)){
+        matchingTags += 1;
+      }
+    }
+
+    return {
+      countMatchingIngredients:matchingIngredients,
+      countMatchingTags:matchingTags
+    }
+  }
+
+// Main function that receives tags and ingredients to find best match
+export const getBestRecipes = functions.https.onRequest(async (request, response)=>{
+  let payload:any = request.body;
+  try{
+
+    let recipesWithScores:any[] = [];
+    let ingredients:string[] = payload.ingredients? payload.ingredients : [];
+    let tags:string[] = payload.tags? payload.tags : [];
+    let snapshot = await db.collection('Recipes').get();
+
+    snapshot.forEach((doc:any) => {
+      let data = doc.data();
+      let {countMatchingIngredients, countMatchingTags} = getScore(
+        ingredients, data.ingredients, tags, data.tags
+      );
+
+      recipesWithScores.push(
+        {
+          recipeID:doc.id,
+          ingredientScore:countMatchingIngredients,
+          tagScore:countMatchingTags
+        }
+      );
+    });
+
+    // Sorting the values
+    recipesWithScores.sort(function (a:any, b:any){
+      return b.ingredientScore - a.ingredientScore || b.tagScore - a.tagScore;
+    });
+
+    console.log(recipesWithScores);
+
+    response.send('Success...');
+  }catch(error){
+    console.log(error);
+    response.statusCode = 400;
+    response.send('Bad request');
+  }
+});
