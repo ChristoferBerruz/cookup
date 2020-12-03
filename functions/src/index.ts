@@ -8,12 +8,14 @@ const db = admin.firestore();
 const cors = require('cors')({origin: true});
 
 export const getIngredientsData = functions.https.onRequest(async (request, response)=>{
-  const recipes = await db.collection('ingredients').get();
-  var result:any= {}
-  recipes.forEach((doc:any) => {
-    result[doc.id] = doc.data().ingredients;
+  cors(request, response, async () => {
+    const recipes = await db.collection('ingredients').get();
+    var result:any= {}
+    recipes.forEach((doc:any) => {
+      result[doc.id] = doc.data().ingredients;
+    });
+    response.send(result)
   });
-  response.send(result)
 });
 
 export const getRecipe = functions.https.onRequest(async (request, response) => {
