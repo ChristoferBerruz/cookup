@@ -6,6 +6,7 @@ import LoggedStatus from './LoggedStatus';
 const Header : React.FC = () => {
     return(
         <IonHeader>
+            <IonToolbar>
             <IonGrid>
                 <IonRow>
                     <IonCol sizeMd="6">
@@ -18,6 +19,7 @@ const Header : React.FC = () => {
                     </IonCol>
                 </IonRow>
             </IonGrid>
+            </IonToolbar>
         </IonHeader>
     );
 }
