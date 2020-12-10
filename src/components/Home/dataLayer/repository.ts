@@ -22,6 +22,10 @@ export function getBestMatchRecipes(ingredients:string[], tags:string[]):Promise
     });
 }
 
+export function getAvailableTags():Promise<AxiosResponse<string[]>>{
+    return axios.get<string[]>(`http://localhost:5001/cookup-fdf96/us-central1/getAvailableTags`);
+}
+
 export function getImageForRecipe(recipeID:string): Promise<any>{
     return storage.ref("recipe_images/"+recipeID+'.jpg').getDownloadURL();
 }

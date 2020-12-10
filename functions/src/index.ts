@@ -7,6 +7,29 @@ const db = admin.firestore();
 
 const cors = require('cors')({origin: true});
 
+
+export const getAvailableTags = functions.https.onRequest(async (request, response) => {
+  cors(request, response, async () => {
+    let tags : string[] = [];
+    const snapshot  = await db.collection('Recipes').get();
+
+    snapshot.forEach((document:any) => {
+
+      let possibleTags  = document.data().tags;
+
+      possibleTags.forEach((tag:any) => {
+
+        if(!tags.includes(tag)){
+          tags.push(tag)
+        }
+      });
+    });
+
+    response.send(tags);
+  });
+});
+
+
 export const getIngredientsData = functions.https.onRequest(async (request, response)=>{
   cors(request, response, async () => {
     const recipes = await db.collection('ingredients').get();
