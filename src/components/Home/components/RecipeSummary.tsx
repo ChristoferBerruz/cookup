@@ -2,6 +2,17 @@ import React, {useContext} from 'react';
 import {IonItem} from '@ionic/react';
 import {CookUpContext} from '../../Providers/CookUpProvider';
 
+
+function stringAnArray(arr:string[]):string{
+    let res = "";
+    arr.forEach(function (value, idx){
+        res += value;
+        if(idx < res.length - 1){
+            res += ", ";
+        }
+    })
+    return res;
+}
 const RecipeSummary:React.FC = () => {
     const {selectedIngredients, setSelectedIngredients,
     selectedTags, setSelectedTags} = useContext(CookUpContext);
@@ -10,13 +21,13 @@ const RecipeSummary:React.FC = () => {
             <IonItem>
                 Ingredients:{
                 selectedIngredients.length ? 
-                selectedIngredients.reduce((prev, cur) => prev + ',' + cur + ','):'None'
+                stringAnArray(selectedIngredients):''
                 }
             </IonItem>
             <IonItem>
                 Tags:{
                     selectedTags.length ?
-                    selectedTags.reduce((prev, cur) => prev + ', ' + cur + ',') : 'None'
+                    stringAnArray(selectedTags): ''
                 }
             </IonItem>
         </React.Fragment>
