@@ -6,8 +6,8 @@ export interface ingredientsData{
     [key:string]:string[];
 }
 
-export default function getAvailableIngredients():ingredientsData {
-    return {};
+export function getAvailableIngredients():Promise<AxiosResponse<ingredientsData>> {
+    return axios.get<ingredientsData>(`http://localhost:5001/cookup-fdf96/us-central1/getIngredientsData`);
 }
 
 

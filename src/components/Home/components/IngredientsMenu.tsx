@@ -5,7 +5,8 @@ import {IonSearchbar, IonTitle, IonItem,
 import {restaurant, closeCircle} from 'ionicons/icons';
 import {CookUpContext} from '../../Providers/CookUpProvider';
 
-import getAvailableIngredients, {ingredientsData} from '../datalayer/repository';
+import {ingredientsData} from '../datalayer/repository';
+import {getAvailableIngredients} from '../datalayer/repository';
 import SelectFiltersComponent from './FilterComponent';
 
 interface IngredientSectionProps{
@@ -85,7 +86,7 @@ const IngredientsMenu : React.FC = () => {
     const SectionsComponent = [];
 
     useEffect(() => {
-        axios.get<ingredientsData>(`http://localhost:5001/cookup-fdf96/us-central1/getIngredientsData`)
+        getAvailableIngredients()
         .then(res =>{
             setData(res.data);
         }).catch(e => {
